@@ -52,9 +52,9 @@ public class CharacterEditer : MonoBehaviour
         useController = _useController;
     }
 
-    public void SetController(Vector3 _controllerCenter, float _controllerRadius, float _controllerHeight)
+    public void SetController(bool _useController, Vector3 _controllerCenter, float _controllerRadius, float _controllerHeight)
     {
-        useController = true;
+        useController = _useController;
         controllerCenter = _controllerCenter;
         controllerRadius = _controllerRadius;
         controllerHeight = _controllerHeight;

@@ -49,6 +49,8 @@ public class CharacterEditorWindow : EditorWindow
         Vector3 modelPos = EditorGUILayout.Vector3Field("ModelPos", character.modelPos);
         character.SetModel(model, modelPos);
 
+        if (!model) return;
+
         colliderFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(colliderFoldout, "Collider");
         if (colliderFoldout)
         {
@@ -81,7 +83,8 @@ public class CharacterEditorWindow : EditorWindow
             Vector3 controllerCenter = EditorGUILayout.Vector3Field("Center", character.controllerCenter);
             float radius = EditorGUILayout.FloatField("Radius:", character.controllerRadius);
             float height = EditorGUILayout.FloatField("Height:", character.controllerHeight);
-            character.SetController(controllerCenter, radius, height);
+            character.SetController(useControllerToggle, controllerCenter, radius, height);
+            Debug.Log("AA");
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
         EditorGUILayout.EndToggleGroup();
