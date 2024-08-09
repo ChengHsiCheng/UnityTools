@@ -6,24 +6,21 @@ using UnityEngine.UI;
 
 public class DialogueSystem : MonoBehaviour
 {
+    [SerializeField] private Text nameLabel;
     [SerializeField] private Text textLabel;
-    [SerializeField] private TextAsset textFile;
+    [SerializeField] private string excleSheetName;
+    [SerializeField] private float textSpeed;
+
     private int index;
     private bool textEnd = true;
     private bool skipText;
 
     List<string> textList = new List<string>();
+    List<string> nameList = new List<string>();
 
-    void Start()
+    private void OnEnable()
     {
-        var excelRow = ExcelReader.ReadExcel("Sheet1");
-        for (int i = 1; i <= excelRow.Count - 1; i++)
-        {
-            Debug.Log(excelRow[i][1]);
-        }
-
-        GetTextFormFile(textFile);
-        NextText();
+        StartDialogue();
     }
 
     void Update()
@@ -32,6 +29,12 @@ public class DialogueSystem : MonoBehaviour
         {
             NextText();
         }
+    }
+
+    void StartDialogue()
+    {
+        GetTextFormFile();
+        NextText();
     }
 
     void NextText()
@@ -52,30 +55,45 @@ public class DialogueSystem : MonoBehaviour
         StartCoroutine(SetText());
     }
 
-    void GetTextFormFile(TextAsset file)
+    void GetTextFormFile()
     {
-        textList.Clear();
         index = 0;
+        GetExcelDate();
+    }
 
-        var lineDate = file.text.Split("\n");
+    void GetExcelDate()
+    {
+        var excelRow = ExcelReader.ReadExcel(excleSheetName);
 
-        foreach (var line in lineDate)
+        textList.Clear();
+        nameList.Clear();
+
+
+        for (int i = 1; i <= excelRow.Count - 1; i++)
         {
-            textList.Add(line);
+            nameList.Add(excelRow[i][0].ToString());
         }
+
+        for (int i = 1; i <= excelRow.Count - 1; i++)
+        {
+            textList.Add(excelRow[i][1].ToString());
+        }
+
     }
 
     IEnumerator SetText()
     {
         textEnd = false;
         textLabel.text = "";
+        nameLabel.text = nameList[index];
 
         int letter = 0;
+
         while (letter < textList[index].Length - 1 && !skipText)
         {
             textLabel.text += textList[index][letter];
             letter++;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(textSpeed);
         }
 
         textLabel.text = textList[index];
